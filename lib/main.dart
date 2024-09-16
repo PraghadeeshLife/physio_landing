@@ -61,9 +61,12 @@ class _LandingPageState extends State<LandingPage> {
             const Text('PhysioTrack', style: TextStyle(color: Colors.black)),
           ],
         ),
-        actions: _buildAppBarActions(context),
+        // Only show the hamburger icon on small screens
+        actions: _isLargeScreen(context) ? _buildAppBarActions(context) : null,
+        // This makes the drawer icon appear only on small screens
+        iconTheme: _isLargeScreen(context) ? null : const IconThemeData(color: Colors.black),
       ),
-      drawer: _buildDrawerMenu(context),
+      drawer: _isLargeScreen(context) ? null : _buildDrawerMenu(context),
       body: SingleChildScrollView(
         controller: _scrollController,
         child: Padding(
@@ -94,39 +97,24 @@ class _LandingPageState extends State<LandingPage> {
 
   /// Builds the navigation bar actions based on screen size
   List<Widget> _buildAppBarActions(BuildContext context) {
-    if (_isLargeScreen(context)) {
-      return [
-        TextButton(
-          onPressed: () => _scrollToSection(_featuresKey),
-          child: const Text('Features'),
-        ),
-        TextButton(
-          onPressed: () => _scrollToSection(_pricingKey),
-          child: const Text('Pricing'),
-        ),
-        TextButton(
-          onPressed: () => _scrollToSection(_aboutKey),
-          child: const Text('About'),
-        ),
-        TextButton(
-          onPressed: () => _scrollToSection(_contactKey),
-          child: const Text('Contact'),
-        ),
-      ];
-    } else {
-      return [
-        Builder(
-          builder: (context) {
-            return IconButton(
-              icon: const Icon(Icons.menu, color: Colors.black),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            );
-          },
-        ),
-      ];
-    }
+    return [
+      TextButton(
+        onPressed: () => _scrollToSection(_featuresKey),
+        child: const Text('Features'),
+      ),
+      TextButton(
+        onPressed: () => _scrollToSection(_pricingKey),
+        child: const Text('Pricing'),
+      ),
+      TextButton(
+        onPressed: () => _scrollToSection(_aboutKey),
+        child: const Text('About'),
+      ),
+      TextButton(
+        onPressed: () => _scrollToSection(_contactKey),
+        child: const Text('Contact'),
+      ),
+    ];
   }
 
   /// Drawer for smaller screens (hamburger menu)
@@ -216,6 +204,10 @@ class HeroSection extends StatelessWidget {
     );
   }
 }
+
+// Features, Pricing, About, Contact sections go below here
+
+// PricingSection, FeaturesSection, AboutSection, ContactSection same as earlier.
 
 class FeaturesSection extends StatelessWidget {
   const FeaturesSection({Key? key}) : super(key: key);
